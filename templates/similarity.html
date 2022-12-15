@@ -1,0 +1,101 @@
+<head>
+    <style> body { margin: 0; } </style>
+</head>
+  
+<body>
+    <br>
+    <div style="text-align: center; color: grey; font-family: courier; font-size: 80%">
+
+        <form action="/file" method="post" enctype="multipart/form-data">
+            <label for="file">Seleccione el fichero:</label>
+            <input type="file" id="file" name="file">
+            <input type="submit" value="Enviar">
+        </form>
+        
+        <form action="/graph" method="post" enctype="multipart/form-data">
+            <label for="function">Seleccione la función:</label>
+            <select name="function" id="function"></select>
+            <input type="submit" value="Mostrar">
+        </form>
+
+        <form action="/similarity" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="similarity_function" name="function">
+            <input type="submit" value="Buscar similitudes">
+        </form>
+
+        <form action="/comparison" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="comparison_function" name="function">
+            <label for="function2">Seleccione la función:</label>
+            <select name="function2" id="function2"></select>
+            <input type="submit" value="Mostrar">
+        </form>
+
+        <form action="/change_graph" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="change_function1" name="function">
+            <input type="hidden" id="change_function2" name="function2">
+            <label for="graph_type">Seleccione el tipo de grafo:</label>
+            <select name="graph_type" id="graph_type">
+                <option value="cfg">CFG con instrucciones</option>
+                <option value="little_cfg">CFG sin instrucciones</option>
+                <option value="callgraph">Callgraph</option>
+            </select>
+            <input type="submit" value="Cambiar">
+        </form>
+
+    </div>
+    <!--br-->
+
+    <div id="graph">
+        <textarea readonly name="currentFunction" id="currentFunction" rows="38" cols="90" style="font-size:100%" wrap="off"></textarea> &nbsp;
+        <textarea readonly name="otherFunction" id="otherFunction" rows="38" cols="90" style="font-size:100%" wrap="off"></textarea>
+    </div>
+
+    <script>
+
+        const currentFunction = '{{ function }}';
+        const currentFunction2 = '{{ function2 }}';
+
+        const jsondata = JSON.parse('{{ functions | tojson }}');
+        const functions = jsondata.functions;
+        var select = document.getElementById('function');
+        var similarity_hidden = document.getElementById('similarity_function');
+        var comparison_hidden = document.getElementById('comparison_function');
+        functions.forEach(f => {
+            var opt = document.createElement('option');
+            opt.value = f;
+            opt.innerHTML = f;
+            select.appendChild(opt);
+        });
+        select.value = currentFunction;
+        similarity_hidden.value = currentFunction;
+        comparison_hidden.value = currentFunction;
+
+        const text = '{{ fgraph }}';
+        const text2 = '{{ fgraph2 }}';
+        document.getElementById('currentFunction').innerHTML = text.replace(/&lt;br&gt;/g, '\n');
+        document.getElementById('otherFunction').innerHTML = text2.replace(/&lt;br&gt;/g, '\n');
+
+        const jsondata2 = JSON.parse('{{ scores | tojson }}');
+        const scores = jsondata2.scores;
+
+        var select2 = document.getElementById('function2');
+        scores.forEach(score => {
+            var opt = document.createElement('option');
+            opt.value = score;
+            opt.innerHTML = score;
+            select2.appendChild(opt);
+        });
+        select2.value = currentFunction2;
+
+        var change_hidden1 = document.getElementById('change_function1');
+        var change_hidden2 = document.getElementById('change_function2');
+        change_hidden1.value = currentFunction;
+        change_hidden2.value = currentFunction2;
+
+        const text3 = '{{ graph_type }}';
+        var select3 = document.getElementById('graph_type');
+        select3.value = text3;
+
+    </script>
+
+</body>

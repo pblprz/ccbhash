@@ -1,0 +1,20 @@
+<head>
+    <style> body { margin: 0; } </style>
+</head>
+  
+<body>
+    <br>
+    <div style="text-align: center; color: grey; font-family: courier; font-size: 80%">
+        <form action="/file" method="post" enctype="multipart/form-data">
+                <label for="file">Seleccione el fichero:</label>
+                <input type="file" id="file" name="file">
+                <input type="submit" value="Enviar">
+        </form>
+    </div>
+    <br>
+
+    <div id="graph">
+        <textarea readonly name="currentFunction" id="currentFunction" rows="40" cols="90" style="font-size:100%" wrap="off"></textarea> &nbsp;
+        <textarea readonly name="otherFunction" id="otherFunction" rows="40" cols="90" style="font-size:100%" wrap="off"></textarea>
+    </div>
+</body>

@@ -1,0 +1,57 @@
+<head>
+    <style> body { margin: 0; } </style>
+</head>
+  
+<body>
+    <br>
+    <div style="text-align: center; color: grey; font-family: courier; font-size: 80%">
+
+        <form action="/file" method="post" enctype="multipart/form-data">
+            <label for="file">Seleccione el fichero:</label>
+            <input type="file" id="file" name="file">
+            <input type="submit" value="Enviar">
+        </form>
+        
+        <form action="/graph" method="post" enctype="multipart/form-data">
+            <label for="function">Seleccione la función:</label>
+            <select name="function" id="function"></select>
+            <input type="submit" value="Mostrar">
+        </form>
+
+        <form action="/similarity" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="similarity_function" name="function">
+            <input type="submit" value="Buscar similitudes">
+        </form>
+
+    </div>
+    <br>
+
+    <div id="graph">
+        <textarea readonly name="currentFunction" id="currentFunction" rows="40" cols="90" style="font-size:100%" wrap="off"></textarea> &nbsp;
+        <textarea readonly name="otherFunction" id="otherFunction" rows="40" cols="90" style="font-size:100%" wrap="off"></textarea>
+    </div>
+
+    <script>
+
+        const currentFunction = '{{ function }}';
+
+        const jsondata = JSON.parse('{{ functions | tojson }}');
+        const functions = jsondata.functions;
+        var select = document.getElementById('function');
+        var similarity_hidden = document.getElementById('similarity_function');
+        functions.forEach(f => {
+            var opt = document.createElement('option');
+            opt.value = f;
+            opt.innerHTML = f;
+            select.appendChild(opt);
+        });
+        select.value = currentFunction;
+        similarity_hidden.value = currentFunction;
+
+        const text = '{{ fgraph }}';
+        console.log(text);
+        document.getElementById('currentFunction').innerHTML = text.replace(/&lt;br&gt;/g, '\n');
+
+    </script>
+
+</body>
